@@ -17,7 +17,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let cache = NSURLCache(memoryCapacity: 8 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
+        
+        NSURLCache.setSharedURLCache(cache)
+        
+        // Facebook
+        FBLoginView.self
+        FBProfilePictureView.self
+        
         return true
+    }
+    
+    // Facebook
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        
+        var wasHandled: Bool = FBAppCall.handleOpenURL(url, sourceApplication: sourceApplication)
+        
+        return wasHandled
+    }
+    
+    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+        
+        NSURLCache.sharedURLCache().removeAllCachedResponses()
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -49,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.SoniaRosa.ExchangeAGram" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as! NSURL
+        return urls[urls.count-1] as NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
